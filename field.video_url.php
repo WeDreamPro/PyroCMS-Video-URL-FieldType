@@ -7,13 +7,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *
  * @package		PyroStreams
  * @author		Rigo B Castro
- * @copyright           Copyright (c) 2013, Rigo B Castro
+ * @author		Jose Luis Fonseca
+ * @copyright           Copyright (c) 2013, Rigo B Castro, Jose luis Fonseca
  */
 class Field_video_url {
 
     public $field_type_slug = 'video_url';
     public $db_col_type = 'text';
-    public $version = '1.0.0';
+    public $version = '1.1.0';
+    public $custom_parameters = array('video_heigth','video_width','video_autoplay');
     public $author = array('name' => 'Rigo B Castro', 'url' => 'http://rigobcastro.com');
 
     // --------------------------------------------------------------------------
@@ -25,10 +27,9 @@ class Field_video_url {
      * @param   $params	array
      * @return	string
      */
-    public function form_output($params)
-    {
+    public function form_output($params) {
         $video_info = !empty($params['value']) ? json_decode($params['value']) : null;
-        
+
         $input_options = array(
             'name' => $params['form_slug'] . '_url',
             'type' => 'text',
@@ -37,15 +38,47 @@ class Field_video_url {
             'value' => !empty($video_info->url) ? $video_info->url : null,
             'placeholder' => lang('streams:video_url.input_placeholder')
         );
-        
+
         $input_hidden_options = array(
             $params['form_slug'] => $params['value']
         );
 
         return $this->CI->type->load_view('video_url', 'input', array(
-            'input_options' => $input_options,
-            'input_hidden_options' => $input_hidden_options
-        ));
+                    'input_options' => $input_options,
+                    'input_hidden_options' => $input_hidden_options
+                ));
+    }
+    
+    // --------------------------------------------------------------------------
+    
+    /**
+     * Custom parameters
+     * @author Jose Fonseca <jose@ditecnologia.com>
+     */
+
+    public function param_video_heigth($value = null) {
+        return array(
+            'input' => form_input('video_heigth', $value),
+            'instructions' => $this->CI->lang->line('streams.video_heigth.instructions')
+        );
+    }
+    
+    public function param_video_width($value = null) {
+        return array(
+            'input' => form_input('video_width', $value),
+            'instructions' => $this->CI->lang->line('streams.video_width.instructions')
+        );
+    }
+    
+    public function param_video_autoplay($value = null) {
+        $options = array(
+            '0' => $this->CI->lang->line('streams.video_width.no'),
+            '1' => $this->CI->lang->line('streams.video_width.yes')
+        );
+        return array(
+            'input' => form_dropdown('video_autoplay',$options, $value),
+            'instructions' => $this->CI->lang->line('streams.video_autoplay.instructions')
+        );
     }
 
     // --------------------------------------------------------------------------
@@ -53,45 +86,32 @@ class Field_video_url {
     /**
      * Tag output variables
      *
-     * Outputs 'latitude' & 'longitude' variables
      *
      * @access 	public
      * @param	string
      * @param	array
      * @return	array
      */
-    public function pre_output_plugin($input)
-    {
+    public function pre_output_plugin($input,$params) {
         if (!$input)
             return null;
-
-        $location = json_decode($input);
-
-        # Maintain backward compatability
-        if (!is_object($location))
-        {
-            $pieces = explode(',', $input);
-            if (count($pieces) != 2)
-                return null;
-
-            $array = array(
-                'lat' => $pieces[0],
-                'lng' => $pieces[1],
-                'address' => null,
-            );
-
-            $location = (object) $array;
+        $data = json_decode($input);
+        /** define defaults **/
+        $height = 315;
+        $width = 560;
+        $source = $data->src;
+        /** set options **/
+        if(!empty($params['video_heigth'])){
+            $height = $params['video_heigth'];
         }
-
-        $data = array(
-            'latitude' => $location->lat,
-            'longitude' => $location->lng,
-            'lat' => $location->lat,
-            'lng' => $location->lng,
-            'address' => $location->address,
-        );
-
-        return $data;
+        if(!empty($params['video_width'])){
+            $width = $params['video_width'];
+        }
+        if(!empty($params['video_autoplay'])){
+            $source = $source.'?autoplay=1';
+        }
+        $iframe = '<iframe width="'.$width.'" src="' . $source . '" height="'.$height.'" frameborder="0" allowfullscreen></iframe>';
+        return $iframe;
     }
 
     // ----------------------------------------------------------------------
@@ -105,8 +125,8 @@ class Field_video_url {
      * @param $field object
      * @return void
      */
-    public function event($field)
-    {
+    public function event($field) {
         $this->CI->type->add_js('video_url', 'video_url.js');
     }
+
 }
