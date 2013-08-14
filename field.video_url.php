@@ -8,7 +8,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package		PyroStreams
  * @author		Rigo B Castro
  * @author		Jose Luis Fonseca
- * @copyright           Copyright (c) 2013, Rigo B Castro, Jose luis Fonseca
+ * @team                WeDreamPro
+ * @copyright           Copyright (c) 2013, WeDreamPro
+ * @link                https://www.pyrocms.com/store/details/video_url_field_type
  */
 class Field_video_url {
 
