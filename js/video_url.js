@@ -3,7 +3,7 @@
 	var provider = {'name': 'youtube'};
 	function get_youtube_from_url(){
 		var $this = $(this),
-		match = $(this).val().match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/),
+		match = $(this).val().match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?.*v=|\/)([^\s&]+)/),
 		$preview_content = $(this).parent().find('.preview_video_url');
 		if(match !== null){
 			$.getJSON('http://gdata.youtube.com/feeds/api/videos/'+match[1]+'?v=2&alt=jsonc',function(data){
@@ -29,7 +29,7 @@
 
 	function get_video_from_url(){
 		var $this = $(this);
-		service = $this.val().match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
+		service = $this.val().match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?.*v=|\/)([^\s&]+)/);
 		if(service === null){
 			get_vimeo_from_url.call($this);
 		}else{
