@@ -88,7 +88,6 @@ class Field_video_url {
     /**
      * Tag output variables
      *
-     *
      * @access 	public
      * @param	string
      * @param	array
@@ -98,11 +97,13 @@ class Field_video_url {
         if (!$input)
             return null;
         $data = json_decode($input);
-        /** define defaults **/
-        $height = 315;
-        $width = 560;
+        
+        /** Define defaults. Allow 100% for manipulation with wrap **/
+        $height = '100%';
+        $width = '100%';
         $source = $data->src;
-        /** set options **/
+        
+        /** Set options **/
         if(!empty($params['video_heigth'])){
             $height = $params['video_heigth'];
         }
