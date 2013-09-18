@@ -82,6 +82,7 @@ class Field_video_url {
             'instructions' => $this->CI->lang->line('streams.video_autoplay.instructions')
         );
     }
+    
 
     // --------------------------------------------------------------------------
 
