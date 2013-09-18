@@ -16,7 +16,7 @@ class Field_video_url {
 
     public $field_type_slug = 'video_url';
     public $db_col_type = 'text';
-    public $version = '1.1.0';
+    public $version = '1.2.1';
     public $custom_parameters = array('video_heigth', 'video_width', 'video_autoplay');
     public $author = array('name' => 'Rigo B Castro', 'url' => 'http://rigobcastro.com');
 
