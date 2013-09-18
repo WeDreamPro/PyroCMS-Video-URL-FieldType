@@ -16,8 +16,8 @@ class Field_video_url {
 
     public $field_type_slug = 'video_url';
     public $db_col_type = 'text';
-    public $version = '1.2.1';
-    public $custom_parameters = array('video_heigth','video_width','video_autoplay');
+    public $version = '1.1.0';
+    public $custom_parameters = array('video_heigth', 'video_width', 'video_autoplay');
     public $author = array('name' => 'Rigo B Castro', 'url' => 'http://rigobcastro.com');
 
     // --------------------------------------------------------------------------
@@ -29,7 +29,8 @@ class Field_video_url {
      * @param   $params	array
      * @return	string
      */
-    public function form_output($params) {
+    public function form_output($params)
+    {
         $video_info = !empty($params['value']) ? json_decode($params['value']) : null;
 
         $input_options = array(
@@ -37,6 +38,9 @@ class Field_video_url {
             'type' => 'text',
             'id' => $params['form_slug'],
             'data-fieldtype' => 'video_url',
+            'data-video-width' => !empty($params['video_width']) ? $params['video_width'] : '100%',
+            'data-video-width' => !empty($params['video_width']) ? $params['video_width'] : '100%',
+            'data-video-autoplay' => !empty($params['video_autoplay']) ? $params['video_autoplay'] : 0,
             'value' => !empty($video_info->url) ? $video_info->url : null,
             'placeholder' => lang('streams:video_url.input_placeholder')
         );
@@ -46,76 +50,77 @@ class Field_video_url {
         );
 
         return $this->CI->type->load_view('video_url', 'input', array(
-                    'input_options' => $input_options,
-                    'input_hidden_options' => $input_hidden_options
-                ));
+                'input_options' => $input_options,
+                'input_hidden_options' => $input_hidden_options
+        ));
     }
-    
+
     // --------------------------------------------------------------------------
-    
+
     /**
      * Custom parameters
      * @author Jose Fonseca <jose@ditecnologia.com>
      */
-
-    public function param_video_heigth($value = null) {
+    public function param_video_heigth($value = null)
+    {
         return array(
             'input' => form_input('video_heigth', $value),
             'instructions' => $this->CI->lang->line('streams.video_heigth.instructions')
         );
     }
-    
-    public function param_video_width($value = null) {
+
+    public function param_video_width($value = null)
+    {
         return array(
             'input' => form_input('video_width', $value),
             'instructions' => $this->CI->lang->line('streams.video_width.instructions')
         );
     }
-    
-    public function param_video_autoplay($value = null) {
+
+    public function param_video_autoplay($value = null)
+    {
         $options = array(
             '0' => $this->CI->lang->line('streams.video_width.no'),
             '1' => $this->CI->lang->line('streams.video_width.yes')
         );
         return array(
-            'input' => form_dropdown('video_autoplay',$options, $value),
+            'input' => form_dropdown('video_autoplay', $options, $value),
             'instructions' => $this->CI->lang->line('streams.video_autoplay.instructions')
         );
     }
-    
 
     // --------------------------------------------------------------------------
 
     /**
      * Tag output variables
      *
+     *
      * @access 	public
      * @param	string
      * @param	array
      * @return	array
      */
-    public function pre_output_plugin($input,$params) {
+    public function pre_output($input, $params)
+    {
         if (!$input)
             return null;
+        
         $data = json_decode($input);
         
-        /** Define defaults. Allow 100% for manipulation with wrap **/
-        $height = '100%';
-        $width = '100%';
-        $source = $data->src;
+        return $data->html;
+    }
+
+    // ----------------------------------------------------------------------
+
+    public function pre_output_plugin($input)
+    {
+        $data = json_decode($input);
         
-        /** Set options **/
-        if(!empty($params['video_heigth'])){
-            $height = $params['video_heigth'];
+        if(!empty($data->thumbnail_url)){
+            $data->thumbnail_img = img($data->thumbnail_url);
         }
-        if(!empty($params['video_width'])){
-            $width = $params['video_width'];
-        }
-        if(!empty($params['video_autoplay'])){
-            $source = $source.'?autoplay=1';
-        }
-        $iframe = '<iframe width="'.$width.'" src="' . $source . '" height="'.$height.'" frameborder="0" allowfullscreen></iframe>';
-        return $iframe;
+
+        return (array) $data;
     }
 
     // ----------------------------------------------------------------------
@@ -129,7 +134,8 @@ class Field_video_url {
      * @param $field object
      * @return void
      */
-    public function event($field) {
+    public function event()
+    {
         $this->CI->type->add_js('video_url', 'video_url.js');
     }
 
