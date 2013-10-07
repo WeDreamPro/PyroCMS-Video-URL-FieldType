@@ -21,6 +21,11 @@ Installation
 
 That's it!
 
+
+Usage
+===========================
+To access the final iframe in the plugin use {{ field_slud:html }}, the iframe already has the parameters selected in the field configuration.
+
 Properties
 ===========================
 
