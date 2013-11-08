@@ -39,7 +39,7 @@ class Field_video_url {
             'id' => $params['form_slug'],
             'data-fieldtype' => 'video_url',
             'data-video-width' => !empty($params['video_width']) ? $params['video_width'] : '100%',
-            'data-video-width' => !empty($params['video_width']) ? $params['video_width'] : '100%',
+            'data-video-height' => !empty($params['video_height']) ? $params['video_height'] : '100%',
             'data-video-autoplay' => !empty($params['video_autoplay']) ? $params['video_autoplay'] : 0,
             'value' => !empty($video_info->url) ? $video_info->url : null,
             'placeholder' => lang('streams:video_url.input_placeholder')
