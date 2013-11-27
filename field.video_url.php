@@ -105,52 +105,60 @@ class Field_video_url {
         if (!$input)
             return null;
         $data = json_decode($input);
-        
-        /** define defaults **/
+
+        /** define defaults * */
         $height = 315;
         $width = 560;
-        $source = $data->provider_name == 'Vimeo' ? "//player.vimeo.com/video/".$data->video_id : "//youtube.com/embed/".$data->video_id ;
-        /** set options **/
-        if(!empty($params['video_heigth'])){
+        $source = $data->provider_name == 'Vimeo' ? "//player.vimeo.com/video/" . $data->video_id : "//youtube.com/embed/" . $data->video_id;
+        /** set options * */
+        if (!empty($params['video_heigth']))
+        {
             $height = $params['video_heigth'];
         }
-        if(!empty($params['video_width'])){
+        if (!empty($params['video_width']))
+        {
             $width = $params['video_width'];
         }
-        if(!empty($params['video_autoplay'])){
-            $source = $source.'?autoplay=1';
+        if (!empty($params['video_autoplay']))
+        {
+            $source = $source . '?autoplay=1';
         }
-        $iframe = '<iframe width="'.$width.'" src="' . $source . '" height="'.$height.'" frameborder="0" allowfullscreen></iframe>';
+        $iframe = '<iframe width="' . $width . '" src="' . $source . '" height="' . $height . '" frameborder="0" allowfullscreen></iframe>';
         $data->html = $iframe;
-        
-        
+        $data->src = $this->_get_src($iframe);
+
         return $data;
     }
 
     // ----------------------------------------------------------------------
 
-    public function pre_output_plugin($input,$params)
+    public function pre_output_plugin($input, $params)
     {
         if (!$input)
             return null;
         $data = json_decode($input);
-        
-        /** define defaults **/
+
+        /** define defaults * */
         $height = 315;
         $width = 560;
-        $source = $data->provider_name == 'Vimeo' ? "//player.vimeo.com/video/".$data->video_id : "//youtube.com/embed/".$data->video_id ;
-        /** set options **/
-        if(!empty($params['video_heigth'])){
+        $source = $data->provider_name == 'Vimeo' ? "//player.vimeo.com/video/" . $data->video_id : "//youtube.com/embed/" . $data->video_id;
+        /** set options * */
+        if (!empty($params['video_heigth']))
+        {
             $height = $params['video_heigth'];
         }
-        if(!empty($params['video_width'])){
+        if (!empty($params['video_width']))
+        {
             $width = $params['video_width'];
         }
-        if(!empty($params['video_autoplay'])){
-            $source = $source.'?autoplay=1';
+        if (!empty($params['video_autoplay']))
+        {
+            $source = $source . '?autoplay=1';
         }
-        $iframe = '<iframe width="'.$width.'" src="' . $source . '" height="'.$height.'" frameborder="0" allowfullscreen></iframe>';
+        $iframe = '<iframe width="' . $width . '" src="' . $source . '" height="' . $height . '" frameborder="0" allowfullscreen></iframe>';
         $data->html = $iframe;
+        $data->src = $this->_get_src($iframe);
+        
         return (array) $data;
     }
 
@@ -168,6 +176,13 @@ class Field_video_url {
     public function event()
     {
         $this->CI->type->add_js('video_url', 'video_url.js');
+    }
+
+    private function _get_src($iframe_string)
+    {
+        $match = array();
+        preg_match('/src="([^"]+)"/', $iframe_string, $match);
+        return $match[1];
     }
 
 }
