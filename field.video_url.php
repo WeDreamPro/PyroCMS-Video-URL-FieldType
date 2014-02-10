@@ -29,8 +29,7 @@ class Field_video_url {
      * @param   $params	array
      * @return	string
      */
-    public function form_output($params)
-    {
+    public function form_output($params) {
         $video_info = !empty($params['value']) ? json_decode($params['value']) : null;
 
         $input_options = array(
@@ -50,9 +49,9 @@ class Field_video_url {
         );
 
         return $this->CI->type->load_view('video_url', 'input', array(
-                'input_options' => $input_options,
-                'input_hidden_options' => $input_hidden_options
-        ));
+                    'input_options' => $input_options,
+                    'input_hidden_options' => $input_hidden_options
+                ));
     }
 
     // ----------------------------------------------------------------------
@@ -61,24 +60,21 @@ class Field_video_url {
      * Custom parameters
      * @author Jose Fonseca <jose@ditecnologia.com>
      */
-    public function param_video_heigth($value = null)
-    {
+    public function param_video_heigth($value = null) {
         return array(
             'input' => form_input('video_heigth', $value),
             'instructions' => $this->CI->lang->line('streams.video_heigth.instructions')
         );
     }
 
-    public function param_video_width($value = null)
-    {
+    public function param_video_width($value = null) {
         return array(
             'input' => form_input('video_width', $value),
             'instructions' => $this->CI->lang->line('streams.video_width.instructions')
         );
     }
 
-    public function param_video_autoplay($value = null)
-    {
+    public function param_video_autoplay($value = null) {
         $options = array(
             '0' => $this->CI->lang->line('streams.video_width.no'),
             '1' => $this->CI->lang->line('streams.video_width.yes')
@@ -100,8 +96,7 @@ class Field_video_url {
      * @param	array
      * @return	array
      */
-    public function pre_output($input, $params)
-    {
+    public function pre_output($input, $params) {
         if (!$input)
             return null;
         $data = json_decode($input);
@@ -111,16 +106,13 @@ class Field_video_url {
         $width = 560;
         $source = $data->provider_name == 'Vimeo' ? "//player.vimeo.com/video/" . $data->video_id : "//youtube.com/embed/" . $data->video_id;
         /** set options * */
-        if (!empty($params['video_heigth']))
-        {
+        if (!empty($params['video_heigth'])) {
             $height = $params['video_heigth'];
         }
-        if (!empty($params['video_width']))
-        {
+        if (!empty($params['video_width'])) {
             $width = $params['video_width'];
         }
-        if (!empty($params['video_autoplay']))
-        {
+        if (!empty($params['video_autoplay'])) {
             $source = $source . '?autoplay=1';
         }
         $iframe = '<iframe width="' . $width . '" src="' . $source . '" height="' . $height . '" frameborder="0" allowfullscreen></iframe>';
@@ -132,8 +124,7 @@ class Field_video_url {
 
     // ----------------------------------------------------------------------
 
-    public function pre_output_plugin($input, $params)
-    {
+    public function pre_output_plugin($input, $params) {
         if (!$input)
             return null;
         $data = json_decode($input);
@@ -143,22 +134,19 @@ class Field_video_url {
         $width = 560;
         $source = $data->provider_name == 'Vimeo' ? "//player.vimeo.com/video/" . $data->video_id : "//youtube.com/embed/" . $data->video_id;
         /** set options * */
-        if (!empty($params['video_heigth']))
-        {
+        if (!empty($params['video_heigth'])) {
             $height = $params['video_heigth'];
         }
-        if (!empty($params['video_width']))
-        {
+        if (!empty($params['video_width'])) {
             $width = $params['video_width'];
         }
-        if (!empty($params['video_autoplay']))
-        {
+        if (!empty($params['video_autoplay'])) {
             $source = $source . '?autoplay=1';
         }
         $iframe = '<iframe width="' . $width . '" src="' . $source . '" height="' . $height . '" frameborder="0" allowfullscreen></iframe>';
         $data->html = $iframe;
         $data->src = $this->_get_src($iframe);
-        
+
         return (array) $data;
     }
 
@@ -173,13 +161,11 @@ class Field_video_url {
      * @param $field object
      * @return void
      */
-    public function event()
-    {
+    public function event() {
         $this->CI->type->add_js('video_url', 'video_url.js');
     }
 
-    private function _get_src($iframe_string)
-    {
+    private function _get_src($iframe_string) {
         $match = array();
         preg_match('/src="([^"]+)"/', $iframe_string, $match);
         return $match[1];

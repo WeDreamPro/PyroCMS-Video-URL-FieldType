@@ -48,7 +48,14 @@
                     alert("Sorry no data found.");
                 }
             });
+        }else{
+            var $preview_content = $(this).parent().find('.preview_video_url'),
+            $iframe_content = $preview_content.find('.iframe-preview'),
+            $hidden = $preview_content.find('[type="hidden"]');
+            $hidden.val('');
+            $iframe_content.html('');
         }
+        
     }
 
     function render_preview(data) {
