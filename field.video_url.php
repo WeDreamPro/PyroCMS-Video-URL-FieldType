@@ -119,7 +119,7 @@ class Field_video_url {
         $data->html = $iframe;
         $data->src = $this->_get_src($iframe);
 
-        return $data;
+        return $data->html;
     }
 
     // ----------------------------------------------------------------------

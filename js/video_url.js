@@ -40,6 +40,7 @@
                     if(video_id_tosave != 0 ){
                         data.video_id = video_id_tosave;
                     }
+                    data.url = url;
                     if (data) {
                         render_preview.call($this, data);
                     }
